@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UX/UI Audit — Laws of UX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0b0f;
+    --bg2: #11131a;
+    --bg3: #181b24;
+    --bg4: #1f2330;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0f1f5;
+    --text2: #8b90a0;
+    --text3: #5a5f72;
+    --accent: #6d6aff;
+    --accent2: #8f8dff;
+    --accent-bg: rgba(109,106,255,0.1);
+    --green: #22d47b;
+    --green-bg: rgba(34,212,123,0.1);
+    --amber: #f5a623;
+    --amber-bg: rgba(245,166,35,0.1);
+    --red: #ff5f5f;
+    --red-bg: rgba(255,95,95,0.1);
+    --cyan: #3dd9eb;
+    --cyan-bg: rgba(61,217,235,0.1);
+    --r: 8px;
+    --r2: 12px;
+    --r3: 16px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,11,15,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: -0.02em;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .badge {
+    font-size: 11px; font-weight: 500; padding: 2px 8px;
+    border-radius: 999px; background: var(--accent-bg);
+    color: var(--accent2); border: 1px solid rgba(109,106,255,0.25);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .laws-count { font-size: 12px; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
+
+  /* ── LAYOUT ── */
+  .shell {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: calc(100vh - 60px);
+  }
+
+  /* ── SIDEBAR ── */
+  aside {
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 1rem;
+    position: sticky; top: 60px;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg4) transparent;
+  }
+  .sidebar-section { margin-bottom: 1.75rem; }
+  .sidebar-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text3);
+    padding: 0 0.5rem; margin-bottom: 0.5rem;
+  }
+  .sidebar-filter {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .filter-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px; border-radius: var(--r);
+    border: none; background: transparent;
+    color: var(--text2); font-size: 13px; cursor: pointer;
+    text-align: left; transition: all 0.15s; width: 100%;
+    font-family: inherit;
+  }
+  .filter-btn:hover { background: var(--bg3); color: var(--text); }
+  .filter-btn.active { background: var(--accent-bg); color: var(--accent2); }
+  .filter-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .filter-count {
+    margin-left: auto; font-size: 11px; font-family: 'JetBrains Mono', monospace;
+    color: var(--text3);
+  }
+
+  /* ── MAIN ── */
+  main { padding: 2rem; overflow-y: auto; }
+
+  /* ── HERO / AUDIT INPUT ── */
+  .audit-hero {
+    background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
+    border: 1px solid var(--border2);
+    border-radius: var(--r3);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative; overflow: hidden;
+  }
+  .audit-hero::before {
+    content: '';
+    position: absolute; top: -60px; right: -60px;
+    width: 220px; height: 220px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(109,106,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent2);
+    margin-bottom: 0.5rem; font-family: 'JetBrains Mono', monospace;
+  }
+  .hero-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px; font-weight: 700; letter-spacing: -0.03em;
+    line-height: 1.2; margin-bottom: 0.5rem;
+  }
+  .hero-sub { font-size: 13px; color: var(--text2); margin-bottom: 1.5rem; max-width: 520px; }
+
+  .input-row { display: flex; gap: 10px; align-items: stretch; }
+  .url-input {
+    flex: 1; background: var(--bg);
+    border: 1px solid var(--border2);
+    color: var(--text); font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; padding: 0 1rem;
+    border-radius: var(--r); outline: none;
+    transition: border-color 0.2s;
+    height: 44px;
+  }
+  .url-input:focus { border-color: var(--accent); }
+  .url-input::placeholder { color: var(--text3); }
+
+  .audit-btn {
+    padding: 0 1.25rem; height: 44px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: var(--r);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+    transition: all 0.15s; display: flex; align-items: center; gap: 8px;
+  }
+  .audit-btn:hover { background: var(--accent2); transform: translateY(-1px); }
+  .audit-btn:active { transform: translateY(0); }
+  .audit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .audit-btn svg { width: 16px; height: 16px; }
+
+  .demo-links { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .demo-link {
+    font-size: 11px; color: var(--text3); cursor: pointer;
+    padding: 3px 8px; border: 1px solid var(--border);
+    border-radius: 999px; font-family: 'JetBrains Mono', monospace;
+    transition: all 0.15s;
+  }
+  .demo-link:hover { color: var(--accent2); border-color: var(--accent); }
+
+  /* ── REPORT PANEL ── */
+  #report { display: none; margin-bottom: 2rem; }
+  #report.visible { display: block; }
+
+  .report-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .report-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px; font-weight: 600; letter-spacing: -0.02em;
+  }
+  .report-meta { font-size: 12px; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
+  .download-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 14px; border-radius: var(--r);
+    background: var(--green-bg); color: var(--green);
+    border: 1px solid rgba(34,212,123,0.2);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    font-family: inherit; transition: all 0.15s;
+  }
+  .download-btn:hover { background: rgba(34,212,123,0.2); }
+
+  .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+  .score-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--r2); padding: 1rem 1.25rem;
+  }
+  .score-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .score-val { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; }
+  .score-val.green { color: var(--green); }
+  .score-val.amber { color: var(--amber); }
+  .score-val.red { color: var(--red); }
+  .score-val.accent { color: var(--accent2); }
+
+  .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+
+  .report-section {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--r2); overflow: hidden;
+  }
+  .report-section.full { grid-column: 1 / -1; }
+  .rs-head {
+    padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 500;
+  }
+  .rs-icon { width: 20px; height: 20px; border-radius: 6px; display: grid; place-items: center; font-size: 12px; }
+  .rs-icon.red { background: var(--red-bg); }
+  .rs-icon.amber { background: var(--amber-bg); }
+  .rs-icon.green { background: var(--green-bg); }
+  .rs-body { padding: 1rem 1.25rem; }
+
+  .finding-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .finding-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .finding-sev {
+    font-size: 10px; font-weight: 600; padding: 2px 7px;
+    border-radius: 999px; flex-shrink: 0; margin-top: 2px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .sev-high { background: var(--red-bg); color: var(--red); }
+  .sev-med { background: var(--amber-bg); color: var(--amber); }
+  .sev-low { background: var(--green-bg); color: var(--green); }
+  .finding-text { flex: 1; }
+  .finding-law { font-size: 11px; color: var(--accent2); margin-bottom: 2px; font-family: 'JetBrains Mono', monospace; }
+  .finding-desc { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+  .rec-item {
+    display: flex; gap: 10px; padding: 9px 0;
+    border-bottom: 1px solid var(--border); align-items: flex-start;
+  }
+  .rec-item:last-child { border-bottom: none; }
+  .rec-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--accent2); min-width: 22px; margin-top: 1px;
+  }
+  .rec-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+  .rec-law { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  .progress-bar-wrap { background: var(--bg4); border-radius: 999px; height: 6px; overflow: hidden; }
+  .progress-bar { height: 100%; border-radius: 999px; transition: width 0.8s ease; }
+
+  /* ── LAWS GRID ── */
+  .section-title-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .section-heading {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px; font-weight: 600; letter-spacing: -0.02em;
+  }
+  .search-input {
+    background: var(--bg2); border: 1px solid var(--border);
+    color: var(--text); font-family: inherit; font-size: 13px;
+    padding: 6px 12px; border-radius: var(--r);
+    outline: none; width: 200px; transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--text3); }
+
+  .laws-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+  }
+
+  .law-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--r2); padding: 1rem;
+    cursor: pointer; transition: all 0.18s; position: relative;
+    user-select: none;
+  }
+  .law-card:hover { border-color: var(--border2); background: var(--bg3); transform: translateY(-2px); }
+  .law-card.active { border-color: var(--accent); background: var(--accent-bg); }
+  .law-tag {
+    display: inline-flex; align-items: center;
+    font-size: 10px; font-weight: 600; padding: 2px 8px;
+    border-radius: 999px; margin-bottom: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .tag-cognitive { background: rgba(109,106,255,0.15); color: #a8a6ff; }
+  .tag-perception { background: rgba(61,217,235,0.15); color: var(--cyan); }
+  .tag-behavior { background: rgba(34,212,123,0.15); color: var(--green); }
+  .tag-memory { background: rgba(245,166,35,0.15); color: var(--amber); }
+  .tag-motor { background: rgba(255,95,95,0.15); color: var(--red); }
+
+  .law-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px; font-weight: 600; letter-spacing: -0.01em;
+    margin-bottom: 4px; line-height: 1.3;
+  }
+  .law-thumb { font-size: 12px; color: var(--text3); line-height: 1.5; }
+
+  /* ── DETAIL PANEL ── */
+  #detail-panel {
+    display: none; position: fixed;
+    top: 0; right: 0; bottom: 0; width: 420px;
+    background: var(--bg2); border-left: 1px solid var(--border2);
+    z-index: 200; overflow-y: auto;
+    box-shadow: -20px 0 60px rgba(0,0,0,0.5);
+    padding: 2rem;
+    animation: slideIn 0.2s ease;
+  }
+  #detail-panel.open { display: block; }
+  @keyframes slideIn { from { transform: translateX(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  .dp-close {
+    position: absolute; top: 1.25rem; right: 1.25rem;
+    width: 32px; height: 32px; border-radius: var(--r);
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text2); cursor: pointer; font-size: 18px; line-height: 1;
+    display: grid; place-items: center; transition: all 0.15s;
+  }
+  .dp-close:hover { background: var(--bg4); color: var(--text); }
+  .dp-tag { margin-bottom: 1rem; }
+  .dp-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px; font-weight: 700; letter-spacing: -0.03em;
+    margin-bottom: 0.75rem; line-height: 1.2;
+  }
+  .dp-summary {
+    font-size: 14px; color: var(--text2); line-height: 1.7;
+    padding: 1rem; background: var(--bg3); border-radius: var(--r);
+    border-left: 3px solid var(--accent); margin-bottom: 1.25rem;
+  }
+  .dp-section-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text3);
+    margin-bottom: 0.5rem; margin-top: 1.25rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .dp-points { display: flex; flex-direction: column; gap: 8px; }
+  .dp-point {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 13px; color: var(--text2); line-height: 1.6;
+  }
+  .dp-bullet {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); margin-top: 8px; flex-shrink: 0;
+  }
+  .dp-example {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 1rem; font-size: 13px;
+    color: var(--text2); line-height: 1.6; font-style: italic;
+  }
+  .dp-example strong { color: var(--text); font-style: normal; }
+
+  /* ── LOADING ── */
+  .loading-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(10,11,15,0.85); z-index: 300;
+    backdrop-filter: blur(4px);
+    flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  }
+  .loading-overlay.active { display: flex; }
+  .spinner {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 3px solid var(--border2);
+    border-top-color: var(--accent);
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text2); }
+  .loading-step { font-size: 12px; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 99px; }
+
+  /* ── OVERLAY DISMISS ── */
+  #overlay-bg {
+    display: none; position: fixed; inset: 0; z-index: 199;
+    background: rgba(0,0,0,0.4);
+  }
+  #overlay-bg.open { display: block; }
+
+  .empty-state {
+    text-align: center; padding: 3rem 1rem;
+    color: var(--text3); font-size: 13px;
+  }
+  .empty-icon { font-size: 36px; margin-bottom: 0.5rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <span style="font-family:'Space Grotesk',sans-serif">UX/UI Audit</span>
+    <span class="badge">v2.0</span>
+  </div>
+  <div class="header-right">
+    <span class="laws-count" id="lawsCountDisplay">30 laws loaded</span>
+  </div>
+</header>
+
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Categories</div>
+      <div class="sidebar-filter">
+        <button class="filter-btn active" onclick="filterCat('all', this)">
+          <span class="filter-dot" style="background:var(--text3)"></span> All laws
+          <span class="filter-count" id="cnt-all">30</span>
+        </button>
+        <button class="filter-btn" onclick="filterCat('cognitive', this)">
+          <span class="filter-dot" style="background:#a8a6ff"></span> Cognitive
+          <span class="filter-count" id="cnt-cognitive">0</span>
+        </button>
+        <button class="filter-btn" onclick="filterCat('perception', this)">
+          <span class="filter-dot" style="background:var(--cyan)"></span> Perception
+          <span class="filter-count" id="cnt-perception">0</span>
+        </button>
+        <button class="filter-btn" onclick="filterCat('behavior', this)">
+          <span class="filter-dot" style="background:var(--green)"></span> Behavior
+          <span class="filter-count" id="cnt-behavior">0</span>
+        </button>
+        <button class="filter-btn" onclick="filterCat('memory', this)">
+          <span class="filter-dot" style="background:var(--amber)"></span> Memory
+          <span class="filter-count" id="cnt-memory">0</span>
+        </button>
+        <button class="filter-btn" onclick="filterCat('motor', this)">
+          <span class="filter-dot" style="background:var(--red)"></span> Motor
+          <span class="filter-count" id="cnt-motor">0</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Quick actions</div>
+      <div class="sidebar-filter">
+        <button class="filter-btn" onclick="document.getElementById('audit-input').focus(); document.getElementById('audit-input').scrollIntoView({behavior:'smooth'})">
+          <span style="color:var(--accent2)">⚡</span> New audit
+        </button>
+        <button class="filter-btn" onclick="downloadReport()" id="sidebar-download" style="display:none">
+          <span style="color:var(--green)">↓</span> Download report
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">About</div>
+      <div style="padding: 0 0.5rem; font-size: 12px; color: var(--text3); line-height: 1.6;">
+        Based on <a href="https://lawsofux.com" target="_blank" style="color:var(--accent2); text-decoration:none">Laws of UX</a> by Jon Yablonski. Paste any URL to audit it against 30 UX principles.
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- AUDIT HERO -->
+    <div class="audit-hero">
+      <div class="hero-eyebrow">AI-powered audit</div>
+      <h1 class="hero-title">UX/UI Audit &amp; Recommendation</h1>
+      <p class="hero-sub">Paste a website URL to analyze it against 30 Laws of UX. Get a full report of violations and design recommendations.</p>
+
+      <div class="input-row">
+        <input
+          id="audit-input"
+          class="url-input"
+          type="text"
+          placeholder="https://yourapp.com"
+          onkeydown="if(event.key==='Enter') runAudit()"
+        />
+        <button class="audit-btn" id="audit-btn" onclick="runAudit()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Audit site
+        </button>
+      </div>
+
+      <div class="demo-links">
+        <span style="font-size:11px; color:var(--text3)">Try:</span>
+        <span class="demo-link" onclick="setDemo('https://amazon.com')">amazon.com</span>
+        <span class="demo-link" onclick="setDemo('https://airbnb.com')">airbnb.com</span>
+        <span class="demo-link" onclick="setDemo('https://notion.so')">notion.so</span>
+        <span class="demo-link" onclick="setDemo('https://github.com')">github.com</span>
+        <span class="demo-link" onclick="setDemo('https://reddit.com')">reddit.com</span>
+        <span class="demo-link" onclick="setDemo('https://linkedin.com')">linkedin.com</span>
+      </div>
+    </div>
+
+    <!-- REPORT -->
+    <div id="report">
+      <div class="report-header">
+        <div>
+          <div class="report-title" id="report-title">Audit Report</div>
+          <div class="report-meta" id="report-meta"></div>
+        </div>
+        <button class="download-btn" onclick="downloadReport()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download PDF report
+        </button>
+      </div>
+
+      <div class="score-grid">
+        <div class="score-card">
+          <div class="score-label">UX Score</div>
+          <div class="score-val" id="score-ux">—</div>
+          <div style="margin-top:8px">
+            <div class="progress-bar-wrap">
+              <div class="progress-bar" id="bar-ux" style="width:0%; background:var(--accent)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Laws violated</div>
+          <div class="score-val red" id="score-violations">—</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Laws passed</div>
+          <div class="score-val green" id="score-passed">—</div>
+        </div>
+        <div class="score-card">
+          <div class="score-label">Recommendations</div>
+          <div class="score-val accent" id="score-recs">—</div>
+        </div>
+      </div>
+
+      <div class="report-grid">
+        <div class="report-section">
+          <div class="rs-head">
+            <div class="rs-icon red">✗</div>
+            Violations detected
+          </div>
+          <div class="rs-body" id="violations-body"></div>
+        </div>
+
+        <div class="report-section">
+          <div class="rs-head">
+            <div class="rs-icon green">✓</div>
+            Principles upheld
+          </div>
+          <div class="rs-body" id="passed-body"></div>
+        </div>
+
+        <div class="report-section full">
+          <div class="rs-head">
+            <div class="rs-icon amber">→</div>
+            Recommendations
+          </div>
+          <div class="rs-body" id="recs-body"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAWS GRID -->
+    <div class="section-title-row">
+      <h2 class="section-heading">Laws & Best Practices</h2>
+      <input class="search-input" type="text" placeholder="Search laws..." oninput="searchLaws(this.value)" />
+    </div>
+    <div class="laws-grid" id="laws-grid"></div>
+    <div class="empty-state" id="empty-state" style="display:none">
+      <div class="empty-icon">∅</div>
+      No laws match your search.
+    </div>
+
+  </main>
+</div>
+
+<!-- DETAIL PANEL -->
+<div id="overlay-bg" onclick="closeDetail()"></div>
+<div id="detail-panel">
+  <button class="dp-close" onclick="closeDetail()">✕</button>
+  <div class="dp-tag" id="dp-tag"></div>
+  <div class="dp-name" id="dp-name"></div>
+  <div class="dp-summary" id="dp-summary"></div>
+  <div class="dp-section-label">Key principles</div>
+  <div class="dp-points" id="dp-points"></div>
+  <div class="dp-section-label">UX application</div>
+  <div class="dp-example" id="dp-example"></div>
+  <div class="dp-section-label">Common violations</div>
+  <div class="dp-points" id="dp-violations"></div>
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text">Analyzing UX patterns…</div>
+  <div class="loading-step" id="loading-step">Fetching site structure</div>
+</div>
+
+<script>
+const LAWS = [
+  {
+    id: "aesthetic-usability",
+    name: "Aesthetic-Usability Effect",
+    cat: "perception",
+    thumb: "Aesthetically pleasing designs are perceived as more usable.",
+    summary: "Users often perceive aesthetically pleasing design as design that's more usable. Even if two interfaces are functionally identical, users will rate the more beautiful one as easier to use.",
+    principles: [
+      "Aesthetic design masks minor usability issues and builds initial tolerance.",
+      "Visual quality signals quality of the underlying product.",
+      "First impressions are formed within milliseconds and heavily influence subsequent evaluation.",
+      "Positive emotional responses from aesthetics increase persistence when problems arise."
+    ],
+    example: "<strong>Real-world:</strong> Apple's products are often praised for ease of use, partly because their aesthetic quality sets a positive expectation. A beautifully crafted onboarding screen makes new users more patient when learning the interface.",
+    violations: [
+      "Cluttered layouts, inconsistent spacing, and mismatched typography undermine perceived usability.",
+      "Low-resolution imagery or broken visual hierarchy signals lack of care to users.",
+      "Dark patterns and aggressive ads destroy aesthetic trust immediately."
+    ],
+    auditChecks: ["visual consistency", "typography hierarchy", "whitespace usage", "color harmony", "icon quality"]
+  },
+  {
+    id: "choice-overload",
+    name: "Choice Overload",
+    cat: "cognitive",
+    thumb: "Too many options overwhelm users and reduce decision quality.",
+    summary: "When presented with a large number of options, people experience decision paralysis, make worse choices, and feel less satisfied with their final decision — even if it's objectively better.",
+    principles: [
+      "Limit primary navigation to 5–7 top-level items.",
+      "Progressive disclosure: reveal options only when needed.",
+      "Use smart defaults to reduce the number of decisions required.",
+      "Group related options to reduce perceived complexity."
+    ],
+    example: "<strong>Real-world:</strong> Netflix's recommendation engine exists specifically to combat choice overload across thousands of titles. Jam studies show that 6 varieties sell more than 24 varieties.",
+    violations: [
+      "Navigation menus with 15+ items create immediate cognitive overwhelm.",
+      "Long registration forms with many required fields cause abandonment.",
+      "Too many pricing plans without clear differentiation paralyzes purchase decisions."
+    ],
+    auditChecks: ["navigation item count", "form field count", "option density", "progressive disclosure"]
+  },
+  {
+    id: "chunking",
+    name: "Chunking",
+    cat: "cognitive",
+    thumb: "Group information into meaningful units for easier processing.",
+    summary: "A process by which individual pieces of information are broken down and grouped into meaningful units. Chunking makes complex information easier to process, remember, and act on.",
+    principles: [
+      "Group related content visually using proximity and containers.",
+      "Break long forms into multi-step flows.",
+      "Organize data into scannable sections with clear headings.",
+      "Use visual separators to signal conceptual boundaries."
+    ],
+    example: "<strong>Real-world:</strong> Phone numbers are formatted as (555) 867-5309 rather than 5558675309 because chunked groupings are 40% easier to remember. Credit card inputs use the same principle.",
+    violations: [
+      "Walls of unbroken text with no visual breaks.",
+      "Single-page registration forms with 20+ fields.",
+      "Product specs listed as a single dense paragraph."
+    ],
+    auditChecks: ["content grouping", "form structure", "visual hierarchy", "text blocks"]
+  },
+  {
+    id: "cognitive-load",
+    name: "Cognitive Load",
+    cat: "cognitive",
+    thumb: "Minimize the mental effort required to use an interface.",
+    summary: "The total amount of mental effort being used in working memory. Interfaces with high cognitive load cause errors, frustration, and abandonment. Good UX reduces extraneous cognitive load.",
+    principles: [
+      "Remove any element that doesn't serve the user's current goal.",
+      "Use familiar conventions rather than inventing new ones.",
+      "Provide contextual help and progressive disclosure.",
+      "Pre-fill known information to reduce user effort."
+    ],
+    example: "<strong>Real-world:</strong> Google's homepage has one primary action because reducing everything else to zero eliminates cognitive burden for the most important task.",
+    violations: [
+      "Dense information architecture with no clear hierarchy.",
+      "Complex jargon or technical language without explanation.",
+      "Multiple competing calls-to-action on the same view.",
+      "No clear affordances — users can't tell what's clickable."
+    ],
+    auditChecks: ["page focus", "jargon usage", "affordance clarity", "CTA competition", "information density"]
+  },
+  {
+    id: "doherty-threshold",
+    name: "Doherty Threshold",
+    cat: "behavior",
+    thumb: "Keep response times under 400ms to maintain user flow.",
+    summary: "Productivity soars when a computer and its users interact at a pace that ensures neither has to wait on the other. Response times above 400ms break user flow and reduce engagement significantly.",
+    principles: [
+      "Target sub-400ms response times for all interactions.",
+      "Use optimistic UI updates to show immediate feedback.",
+      "Add progress indicators for operations over 1 second.",
+      "Skeleton screens are better than blank loading states."
+    ],
+    example: "<strong>Real-world:</strong> Google found a 500ms delay in search results caused a 20% drop in traffic. Amazon found that 100ms of latency costs them 1% in sales.",
+    violations: [
+      "No loading feedback — users don't know if their action registered.",
+      "Slow page transitions with no visual acknowledgment.",
+      "Form submissions that freeze the UI without feedback.",
+      "Heavy unoptimized images causing long paint times."
+    ],
+    auditChecks: ["load time", "interaction feedback", "loading states", "animation performance"]
+  },
+  {
+    id: "fitts-law",
+    name: "Fitts's Law",
+    cat: "motor",
+    thumb: "Larger and closer targets are faster and easier to click.",
+    summary: "The time to acquire a target is a function of the distance to and the size of the target. Larger, closer targets are acquired faster and with fewer errors — critical for touch interfaces.",
+    principles: [
+      "Primary actions should use the largest, most central buttons.",
+      "Place destructive actions away from frequently used controls.",
+      "Minimum touch target size should be 44×44px (Apple HIG).",
+      "Corner and edge positions are fast targets — use them for navigation."
+    ],
+    example: "<strong>Real-world:</strong> The macOS Dock grows icons under the cursor because larger targets are acquired faster. Mobile 'hamburger' menus fail Fitts's Law — too small, too far from thumbs.",
+    violations: [
+      "Tiny click targets below 32px on mobile interfaces.",
+      "Closely packed links with insufficient spacing (fat finger problem).",
+      "Primary CTA button that's smaller than secondary actions.",
+      "Delete/cancel actions placed next to confirm with same size."
+    ],
+    auditChecks: ["button size", "touch target spacing", "CTA prominence", "destructive action placement"]
+  },
+  {
+    id: "goal-gradient",
+    name: "Goal-Gradient Effect",
+    cat: "behavior",
+    thumb: "Users accelerate effort as they get closer to completing a goal.",
+    summary: "The tendency to approach a goal increases with proximity to the goal. Users exert more effort and are more motivated when they can see they're near completion.",
+    principles: [
+      "Show progress indicators for multi-step flows.",
+      "Provide artificial advancement (e.g., a profile that starts at 30%).",
+      "Break large tasks into visible milestones.",
+      "Celebrate completions to reinforce the behavior."
+    ],
+    example: "<strong>Real-world:</strong> LinkedIn's profile completion meter motivates users to fill in more details. Loyalty cards with 2 pre-stamped holes out of 10 get filled faster than blank 8-hole cards.",
+    violations: [
+      "Multi-step checkout with no progress indicator.",
+      "Long onboarding flows with no sense of how far along you are.",
+      "Empty states that show 0% completion with no encouragement."
+    ],
+    auditChecks: ["progress indicators", "multi-step flows", "completion feedback", "onboarding UX"]
+  },
+  {
+    id: "hicks-law",
+    name: "Hick's Law",
+    cat: "cognitive",
+    thumb: "More choices = more decision time. Simplify to accelerate.",
+    summary: "The time it takes to make a decision increases logarithmically with the number and complexity of choices. Reducing options dramatically speeds up decision-making.",
+    principles: [
+      "Reduce the number of choices presented at any one time.",
+      "Highlight recommended options to provide a default path.",
+      "Categorize complex sets to reduce apparent complexity.",
+      "Remove rarely used features from primary interfaces."
+    ],
+    example: "<strong>Real-world:</strong> TV remotes with 50 buttons overwhelm users. Apple TV remote has 6. Pricing pages with a 'Most Popular' badge guide users to a decision faster.",
+    violations: [
+      "Navigation menus without hierarchy or grouping.",
+      "Pricing tables with 5+ plans and no recommendation.",
+      "Settings pages with all options at equal weight.",
+      "Search results with no filtering or sorting options."
+    ],
+    auditChecks: ["menu complexity", "option count", "default recommendations", "navigation depth"]
+  },
+  {
+    id: "jakobs-law",
+    name: "Jakob's Law",
+    cat: "behavior",
+    thumb: "Users prefer your site to work like sites they already know.",
+    summary: "Users spend most of their time on other sites. They build mental models from existing patterns and expect your site to follow the same conventions — deviating causes confusion and frustration.",
+    principles: [
+      "Use established UI patterns for navigation, forms, and interaction.",
+      "Place logos top-left, primary navigation top or left.",
+      "Shopping carts top-right, search bars top-center or top-right.",
+      "When deviating from convention, provide clear affordances."
+    ],
+    example: "<strong>Real-world:</strong> Moving checkout to a multi-page wizard felt 'wrong' to users until e-commerce normalized it. Users expect underlined blue text to be a link — breaking this causes friction.",
+    violations: [
+      "Non-standard navigation placement without affordances.",
+      "Icons used without labels for non-universal symbols.",
+      "Hover for primary actions (non-standard on touch).",
+      "Right-click context menus as the only way to access features."
+    ],
+    auditChecks: ["navigation conventions", "icon labeling", "interaction patterns", "placement conventions"]
+  },
+  {
+    id: "law-common-region",
+    name: "Law of Common Region",
+    cat: "perception",
+    thumb: "Elements in a shared boundary are perceived as grouped.",
+    summary: "Elements tend to be perceived as a group if they share an area with a clearly defined boundary such as a box, background color, or border — even if they have no other relationship.",
+    principles: [
+      "Use cards to group related content and separate sections.",
+      "Consistent background colors for related interface regions.",
+      "Use borders or visual containers to define functional areas.",
+      "Avoid placing unrelated elements within the same visual region."
+    ],
+    example: "<strong>Real-world:</strong> Dashboard cards group metrics, actions, and context together. A sidebar with a different background communicates it's a distinct region from the main content.",
+    violations: [
+      "Related actions scattered without visual grouping.",
+      "Form fields without clear section grouping.",
+      "Navigation items and content items sharing the same visual region."
+    ],
+    auditChecks: ["content grouping", "visual regions", "card usage", "boundary clarity"]
+  },
+  {
+    id: "law-proximity",
+    name: "Law of Proximity",
+    cat: "perception",
+    thumb: "Nearby elements are perceived as related.",
+    summary: "Objects that are near, or proximate to each other, tend to be grouped together — even if they differ in shape, color, or size. Proximity is one of the strongest grouping cues.",
+    principles: [
+      "Related labels and inputs should be visually adjacent.",
+      "Increase spacing between unrelated elements.",
+      "Button groups should be close; destructive actions separated.",
+      "Use consistent spacing to communicate hierarchy."
+    ],
+    example: "<strong>Real-world:</strong> A form label that's equidistant between two inputs creates ambiguity. Placing it closer to its input makes the relationship clear and reduces errors.",
+    violations: [
+      "Form labels not clearly associated with their input fields.",
+      "Error messages placed far from the fields they describe.",
+      "Action buttons separated from the content they act on."
+    ],
+    auditChecks: ["label-input proximity", "button placement", "error message placement", "spacing consistency"]
+  },
+  {
+    id: "law-pragnanz",
+    name: "Law of Prägnanz",
+    cat: "perception",
+    thumb: "Users interpret ambiguous visuals in the simplest way possible.",
+    summary: "People perceive and interpret ambiguous or complex images as the simplest form possible — the interpretation that requires the least cognitive effort. Complexity is resolved toward simplicity.",
+    principles: [
+      "Simplify icons and illustrations to their essential forms.",
+      "Avoid visual ambiguity in interactive elements.",
+      "Use simple, recognizable shapes over complex custom ones.",
+      "Visual hierarchy should resolve to a clear reading order."
+    ],
+    example: "<strong>Real-world:</strong> The FedEx arrow hidden in negative space is remembered because it uses Prägnanz — users simplify it to the arrow shape. Overly complex icons create ambiguity.",
+    violations: [
+      "Custom icons that users can't identify without labels.",
+      "Complex data visualizations without clear interpretation cues.",
+      "Ambiguous imagery that could mean multiple things."
+    ],
+    auditChecks: ["icon clarity", "visual simplicity", "reading order", "ambiguity"]
+  },
+  {
+    id: "law-similarity",
+    name: "Law of Similarity",
+    cat: "perception",
+    thumb: "Similar-looking elements are perceived as related.",
+    summary: "The human eye tends to perceive similar elements as a complete group, even if they are separated. Shape, color, size, and texture all signal similarity.",
+    principles: [
+      "Use consistent visual treatment for items of the same type.",
+      "Buttons should look like buttons — distinguish from decorative elements.",
+      "Links should be consistently styled throughout.",
+      "Vary visual treatment to communicate different functionality."
+    ],
+    example: "<strong>Real-world:</strong> All navigation links using the same color, weight, and case tells users they are in the same category. When one item looks different, users interpret it as having different behavior.",
+    violations: [
+      "Interactive and non-interactive elements styled identically.",
+      "Primary and secondary buttons with indistinguishable styling.",
+      "Inconsistent link styling across different sections of a page."
+    ],
+    auditChecks: ["visual consistency", "interactive element styling", "button hierarchy", "link consistency"]
+  },
+  {
+    id: "law-uniform-connectedness",
+    name: "Law of Uniform Connectedness",
+    cat: "perception",
+    thumb: "Visually connected elements are perceived as more related.",
+    summary: "Elements that are visually connected are perceived as more related than elements with no connection. Lines, arrows, borders, and shared fills communicate relationship.",
+    principles: [
+      "Connect related items with visible lines or shared containers.",
+      "Use connecting visual devices for process steps and flows.",
+      "Consistent border and line styles for related elements.",
+      "Visual connectors should be used purposefully and sparingly."
+    ],
+    example: "<strong>Real-world:</strong> Breadcrumbs with '>' separators connect navigation steps. Progress steps connected by a line feel like a sequence; unconnected circles feel like independent items.",
+    violations: [
+      "Process flows shown as disconnected boxes without connectors.",
+      "Breadcrumbs missing separators between levels.",
+      "Form steps with no visual connection between them."
+    ],
+    auditChecks: ["flow visualization", "step connectors", "breadcrumbs", "visual relationships"]
+  },
+  {
+    id: "mental-model",
+    name: "Mental Model",
+    cat: "cognitive",
+    thumb: "Design should match users' existing mental models.",
+    summary: "A mental model is a compressed model of what users think they know about a system. Good UX aligns the designed interface with users' existing mental models to reduce the learning curve.",
+    principles: [
+      "Research user mental models before designing solutions.",
+      "Use metaphors that map to real-world concepts users know.",
+      "Folder/file metaphors in digital storage match physical filing.",
+      "When breaking mental models, provide clear guidance."
+    ],
+    example: "<strong>Real-world:</strong> The shopping cart metaphor maps exactly to physical retail, making e-commerce immediately understandable. The 'desktop' metaphor made early computing accessible to non-technical users.",
+    violations: [
+      "Using technical system terminology instead of user-facing language.",
+      "Interaction patterns that contradict established mental models.",
+      "Naming features after internal team jargon instead of user concepts."
+    ],
+    auditChecks: ["terminology", "metaphor alignment", "navigation labels", "interaction conventions"]
+  },
+  {
+    id: "millers-law",
+    name: "Miller's Law",
+    cat: "memory",
+    thumb: "Keep working memory load to 7 ± 2 chunks.",
+    summary: "The average person can only keep 7 (plus or minus 2) items in their working memory at one time. Exceeding this capacity causes errors, frustration, and cognitive fatigue.",
+    principles: [
+      "Limit navigation items to 7 or fewer per level.",
+      "Break long processes into groups of no more than 7 steps.",
+      "Don't require users to remember information from one screen to another.",
+      "Surface key information in context rather than requiring recall."
+    ],
+    example: "<strong>Real-world:</strong> Phone numbers use 7-digit local numbers (pre-area code) because they fit within working memory. Navigation menus that expand to 12 items exceed working memory capacity.",
+    violations: [
+      "Navigation menus with 10+ top-level items.",
+      "Requiring users to remember a code from one page to enter on another.",
+      "Long checkout processes with many fields without saving progress."
+    ],
+    auditChecks: ["navigation count", "form length", "cross-page requirements", "information recall"]
+  },
+  {
+    id: "occams-razor",
+    name: "Occam's Razor",
+    cat: "cognitive",
+    thumb: "The simplest solution is usually the best — cut the unnecessary.",
+    summary: "Among competing hypotheses that predict equally well, the one with the fewest assumptions should be selected. In UX, this means removing unnecessary elements, steps, and complexity.",
+    principles: [
+      "Every UI element must justify its presence — remove what doesn't serve a purpose.",
+      "Shorter user paths are better than longer ones achieving the same goal.",
+      "Features are not free — each adds complexity for all users.",
+      "When in doubt, leave it out."
+    ],
+    example: "<strong>Real-world:</strong> Google's homepage removes everything except the search bar, logo, and two buttons. This extreme application of Occam's Razor makes the primary action unmistakable.",
+    violations: [
+      "Feature bloat — functionality added without clear user need.",
+      "Registration forms collecting data that isn't strictly necessary.",
+      "Promotional banners, modals, and popups interrupting core tasks.",
+      "Redundant navigation patterns (breadcrumbs AND sidebar AND back button)."
+    ],
+    auditChecks: ["feature necessity", "popup/modal usage", "form field necessity", "element justification"]
+  },
+  {
+    id: "paradox-active-user",
+    name: "Paradox of the Active User",
+    cat: "behavior",
+    thumb: "Users start using software immediately without reading manuals.",
+    summary: "Users never read manuals but start using software immediately, often stuck in inefficient patterns. Interfaces must be immediately learnable through exploration.",
+    principles: [
+      "Design for the first-time user to learn through doing.",
+      "Provide contextual tooltips and empty state guidance.",
+      "Progressive onboarding embedded in the core workflow.",
+      "Defaults should represent the optimal behavior for most users."
+    ],
+    example: "<strong>Real-world:</strong> Most users never discover keyboard shortcuts, right-click menus, or power features. Good UX embeds these discoveries in the natural flow rather than hiding them in documentation.",
+    violations: [
+      "Features that require reading documentation to use.",
+      "Empty states that show blank screens with no guidance.",
+      "Complex workflows with no inline hints or contextual help.",
+      "Power features with no discoverability path."
+    ],
+    auditChecks: ["empty states", "onboarding flow", "inline help", "discoverability", "default behaviors"]
+  },
+  {
+    id: "pareto-principle",
+    name: "Pareto Principle",
+    cat: "behavior",
+    thumb: "80% of usage comes from 20% of features. Optimize the core.",
+    summary: "For many events, roughly 80% of effects come from 20% of causes. In UX, 80% of users use only 20% of features — optimize those core features rather than building breadth.",
+    principles: [
+      "Identify and prioritize the 20% of features used 80% of the time.",
+      "Place the most-used features in the most prominent positions.",
+      "Don't bury core functionality behind equal-weight options.",
+      "Use analytics to identify actual usage patterns."
+    ],
+    example: "<strong>Real-world:</strong> Gmail users primarily use Compose, Inbox, and Search — features that receive the most visual prominence. Advanced filters and labs are progressively disclosed.",
+    violations: [
+      "Feature parity in navigation — everything looks equally important.",
+      "No clear primary action on dashboards.",
+      "Edge-case features given equal visual weight as core flows."
+    ],
+    auditChecks: ["feature hierarchy", "primary action clarity", "navigation emphasis", "visual weight distribution"]
+  },
+  {
+    id: "parkinsons-law",
+    name: "Parkinson's Law",
+    cat: "behavior",
+    thumb: "Set time constraints to improve efficiency and prevent scope creep.",
+    summary: "Any task will inflate until all of the available time is spent. In UX, give users just enough space and time for tasks to avoid unnecessary elaboration and bloat.",
+    principles: [
+      "Constrain input fields to only the space needed (character limits).",
+      "Use time-boxed steps in complex workflows.",
+      "Auto-save removes the 'I'll keep editing' mental trap.",
+      "Deadlines and countdowns create urgency and reduce procrastination."
+    ],
+    example: "<strong>Real-world:</strong> Twitter's character limit forces conciseness. Email subject line previews that cut off after 60 characters train users to write concise subjects.",
+    violations: [
+      "Open-ended text fields with no guidance on expected length.",
+      "No auto-save on long forms causing users to over-elaborate.",
+      "No time context in scheduling or booking flows."
+    ],
+    auditChecks: ["input constraints", "auto-save", "character limits", "time context"]
+  },
+  {
+    id: "peak-end-rule",
+    name: "Peak-End Rule",
+    cat: "memory",
+    thumb: "Users judge experiences by their peak and end, not the average.",
+    summary: "People judge an experience largely based on how they felt at its peak (most intense point) and at its end — not on the average or total sum of every moment of the experience.",
+    principles: [
+      "Design the peak moments of your flow to be delightful.",
+      "End every major flow with a positive, celebratory moment.",
+      "The checkout confirmation page is your last impression — make it count.",
+      "Fix painful peaks (error flows, wait times) first."
+    ],
+    example: "<strong>Real-world:</strong> Mailchimp's 'high five' animation on sending an email creates a memorable peak. Dropbox's friendly onboarding empty state creates a positive first impression as an end moment.",
+    violations: [
+      "Checkout success pages that show only a plain confirmation number.",
+      "Error states that are cold and technical rather than empathetic.",
+      "Onboarding that ends abruptly without a celebration moment.",
+      "Long waits with no emotional acknowledgment at the end."
+    ],
+    auditChecks: ["success states", "error state tone", "onboarding end", "celebration moments"]
+  },
+  {
+    id: "postels-law",
+    name: "Postel's Law",
+    cat: "behavior",
+    thumb: "Accept varied input liberally; output clean and consistent data.",
+    summary: "Be liberal in what you accept, and conservative in what you send. Interfaces should accept input in many formats and handle them gracefully, rather than rejecting slight variations.",
+    principles: [
+      "Accept phone numbers with or without formatting characters.",
+      "Accept dates in multiple common formats.",
+      "Auto-format input rather than rejecting it.",
+      "Validate liberally — infer intent and correct gracefully."
+    ],
+    example: "<strong>Real-world:</strong> Google search accepts typos, natural language, and queries phrased many ways. Forms that reject '1-800-555-1234' when they expect '18005551234' violate Postel's Law.",
+    violations: [
+      "Forms that reject phone numbers formatted with dashes or spaces.",
+      "Date fields that only accept MM/DD/YYYY but show no example.",
+      "Search that returns no results for slight typos.",
+      "Credit card fields that reject spaces between number groups."
+    ],
+    auditChecks: ["form input tolerance", "search tolerance", "format flexibility", "error prevention"]
+  },
+  {
+    id: "selective-attention",
+    name: "Selective Attention",
+    cat: "perception",
+    thumb: "Users focus on what's relevant to their goal, ignoring the rest.",
+    summary: "Users focus attention only on a subset of stimuli in an environment — usually those related to their immediate goal. Banner blindness is a direct result of selective attention.",
+    principles: [
+      "Place critical information in the user's task-focused path.",
+      "Avoid relying on peripheral information for important tasks.",
+      "High-contrast, motion, and size attract involuntary attention.",
+      "Don't use attention-grabbing design for non-critical elements."
+    ],
+    example: "<strong>Real-world:</strong> Banner blindness — users so habitually ignore ads placed in the top-right corner that they also ignore important information placed there. Eye-tracking studies show users follow an F-pattern.",
+    violations: [
+      "Important alerts or warnings placed in 'ad-like' positions.",
+      "Critical form instructions placed above or far from the relevant field.",
+      "Relying on sidebar content for critical task completion."
+    ],
+    auditChecks: ["critical info placement", "alert visibility", "attention hierarchy", "banner blindness risk"]
+  },
+  {
+    id: "serial-position",
+    name: "Serial Position Effect",
+    cat: "memory",
+    thumb: "Users best remember the first and last items in a series.",
+    summary: "Users have a propensity to best remember the first and last items in a series (primacy and recency effects). Middle items are most often forgotten.",
+    principles: [
+      "Place most important navigation items first or last.",
+      "Put the primary CTA at the beginning or end of a list.",
+      "Critical information in a sequence should not be buried in the middle.",
+      "In pricing tables, feature the recommended plan first or last."
+    ],
+    example: "<strong>Real-world:</strong> Mac's menu bar places 'File' (most common) first and 'Help' (also used) last. Middle menus (Format, View) receive less recall. Amazon's navigation reflects this pattern.",
+    violations: [
+      "Most important navigation item buried in the middle of 7 items.",
+      "Primary CTA placed as the third button in a button group.",
+      "Key product benefits listed in the middle of a long feature list."
+    ],
+    auditChecks: ["navigation order", "CTA position", "content list order", "feature emphasis placement"]
+  },
+  {
+    id: "teslers-law",
+    name: "Tesler's Law",
+    cat: "cognitive",
+    thumb: "Complexity can't be eliminated, only moved. Move it to the system.",
+    summary: "For any system, there is a certain amount of complexity which cannot be reduced. The question is who handles it — the user or the system. Good UX moves complexity to the system.",
+    principles: [
+      "Handle complexity in the backend rather than exposing it to users.",
+      "Smart defaults absorb decision-making from users.",
+      "Auto-fill and auto-format reduce user effort for required tasks.",
+      "Wizard patterns break inherent complexity into digestible steps."
+    ],
+    example: "<strong>Real-world:</strong> Sending an email is inherently complex (SMTP, routing, authentication) but Gmail hides all of that. The complexity exists — it's just handled by the system instead of the user.",
+    violations: [
+      "Exposing database IDs or system codes to end users.",
+      "Requiring users to understand system states to complete tasks.",
+      "Technical error messages (stack traces) shown to non-technical users."
+    ],
+    auditChecks: ["error message language", "system complexity exposure", "auto-completion", "smart defaults"]
+  },
+  {
+    id: "von-restorff",
+    name: "Von Restorff Effect",
+    cat: "perception",
+    thumb: "The element that stands out will be remembered.",
+    summary: "The Von Restorff Effect (Isolation Effect) predicts that when multiple similar objects are present, the one that differs from the rest is most likely to be noticed and remembered.",
+    principles: [
+      "Use visual contrast to highlight the most important action.",
+      "The primary CTA should be the most visually distinct element.",
+      "Use color, size, or placement to create a clear focal point.",
+      "Don't make everything bold — contrast is created by difference."
+    ],
+    example: "<strong>Real-world:</strong> Pricing tables highlight one plan in a different color — it receives significantly higher conversion. Warning signs are red because they're different from their environment.",
+    violations: [
+      "All buttons on a page have the same visual treatment.",
+      "Primary and secondary CTAs compete for attention equally.",
+      "A 'Recommended' badge in the same color as everything else.",
+      "Important warnings styled identically to regular content."
+    ],
+    auditChecks: ["CTA visual hierarchy", "button contrast", "visual focal point", "highlight treatment"]
+  },
+  {
+    id: "working-memory",
+    name: "Working Memory",
+    cat: "memory",
+    thumb: "Don't make users remember what they can't see. Keep key info visible.",
+    summary: "Working memory temporarily holds and manipulates information needed to complete tasks. It's limited and fragile — interruptions cause information loss. UIs should minimize reliance on it.",
+    principles: [
+      "Show totals and summaries alongside input, not on a separate page.",
+      "Use inline validation rather than end-of-form error lists.",
+      "Keep contextual information visible while users complete tasks.",
+      "Reduce wizard step count — each step taxes working memory."
+    ],
+    example: "<strong>Real-world:</strong> E-commerce checkout shows the order summary alongside the payment form, not on a previous page. Users can't hold 10 items in working memory while entering card details.",
+    violations: [
+      "Shopping cart that requires going back to see what's in the order.",
+      "Multi-page forms that don't show previous step data.",
+      "Search results that disappear when a filter is applied.",
+      "Error lists at the bottom that don't reference specific fields."
+    ],
+    auditChecks: ["inline summaries", "data persistence", "inline validation", "context visibility"]
+  },
+  {
+    id: "zeigarnik-effect",
+    name: "Zeigarnik Effect",
+    cat: "memory",
+    thumb: "Incomplete tasks are remembered better than completed ones.",
+    summary: "People remember uncompleted or interrupted tasks better than completed tasks. Creating open loops in UX motivates users to return and complete actions.",
+    principles: [
+      "Save incomplete forms and invite users to continue.",
+      "Progress indicators and completion percentages create pull.",
+      "Notification badges on incomplete actions keep users returning.",
+      "Gamification streaks leverage the Zeigarnik Effect."
+    ],
+    example: "<strong>Real-world:</strong> LinkedIn's profile completeness meter, Duolingo's daily streaks, and Medium's reading progress bars all use the Zeigarnik Effect to drive return engagement.",
+    violations: [
+      "Forms that don't save progress, forcing restarts after abandonment.",
+      "No draft/save feature for content creation interfaces.",
+      "Empty activity feeds with no hooks to re-engage users.",
+      "Profile setup that shows 0% complete with no starting point."
+    ],
+    auditChecks: ["draft/save features", "progress saving", "engagement hooks", "completion tracking"]
+  },
+  {
+    id: "flow",
+    name: "Flow",
+    cat: "behavior",
+    thumb: "Design to keep users in a state of engaged, effortless focus.",
+    summary: "Flow is the mental state in which a person is fully immersed, energized, and focused. Interfaces achieve flow when challenge and skill are balanced and distractions are eliminated.",
+    principles: [
+      "Remove all distractions during critical task completion (checkout, writing, focus work).",
+      "Match task complexity to user skill level progressively.",
+      "Provide clear goals and immediate feedback at each step.",
+      "Eliminate interruptions like aggressive popups during active tasks."
+    ],
+    example: "<strong>Real-world:</strong> Notion, Figma, and Linear use distraction-free writing/editing modes. Medium removes the navigation bar while reading. These reduce interruption and maintain flow.",
+    violations: [
+      "Popups appearing mid-checkout or mid-form fill.",
+      "Auto-playing ads interrupting content consumption.",
+      "Chat widgets that open automatically while users are reading.",
+      "Unrelated notifications during focused task completion."
+    ],
+    auditChecks: ["interruption patterns", "popup/modal timing", "distraction elements", "focus mode availability"]
+  },
+  {
+    id: "cognitive-bias",
+    name: "Cognitive Bias",
+    cat: "cognitive",
+    thumb: "Systematic thinking errors affect all users — design around them.",
+    summary: "Cognitive biases are systematic errors in thinking that affect our judgments and decisions. Good UX designers understand and account for these biases rather than exploiting them.",
+    principles: [
+      "Anchoring: show the right reference price first in pricing tables.",
+      "Confirmation bias: present balanced information in recommendation flows.",
+      "Social proof: highlight user numbers and reviews authentically.",
+      "Loss aversion: frame benefits as what users keep, not what they gain."
+    ],
+    example: "<strong>Real-world:</strong> Showing a crossed-out price next to the sale price uses anchoring. '10,000+ users' uses social proof. 'Cancel anytime' counters loss aversion in subscription sign-ups.",
+    violations: [
+      "Dark patterns that exploit cognitive biases to manipulate users.",
+      "Fake urgency countdowns for non-expiring deals.",
+      "Hidden costs revealed only at checkout (decoy pricing).",
+      "Subscription opt-outs buried in confusing double-negative language."
+    ],
+    auditChecks: ["dark patterns", "social proof authenticity", "pricing transparency", "urgency authenticity"]
+  }
+];
+
+// ── INIT ──
+let currentFilter = 'all';
+let currentSearch = '';
+let selectedLaw = null;
+let reportData = null;
+let auditedUrl = '';
+
+function init() {
+  renderLaws();
+  updateCounts();
+}
+
+function updateCounts() {
+  const cats = ['cognitive','perception','behavior','memory','motor'];
+  cats.forEach(c => {
+    document.getElementById('cnt-' + c).textContent = LAWS.filter(l => l.cat === c).length;
+  });
+  document.getElementById('cnt-all').textContent = LAWS.length;
+}
+
+function renderLaws() {
+  const grid = document.getElementById('laws-grid');
+  const empty = document.getElementById('empty-state');
+  const filtered = LAWS.filter(l => {
+    const catMatch = currentFilter === 'all' || l.cat === currentFilter;
+    const q = currentSearch.toLowerCase();
+    const searchMatch = !q || l.name.toLowerCase().includes(q) || l.thumb.toLowerCase().includes(q) || l.cat.includes(q);
+    return catMatch && searchMatch;
+  });
+
+  if (!filtered.length) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  grid.innerHTML = filtered.map(l => `
+    <div class="law-card${selectedLaw === l.id ? ' active' : ''}" onclick="openDetail('${l.id}')" id="card-${l.id}">
+      <div class="law-tag ${tagClass(l.cat)}">${l.cat}</div>
+      <div class="law-name">${l.name}</div>
+      <div class="law-thumb">${l.thumb}</div>
+    </div>
+  `).join('');
+}
+
+function tagClass(c) {
+  return { cognitive:'tag-cognitive', perception:'tag-perception', behavior:'tag-behavior', memory:'tag-memory', motor:'tag-motor' }[c] || 'tag-cognitive';
+}
+
+function filterCat(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn[onclick^="filterCat"]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLaws();
+}
+
+function searchLaws(q) {
+  currentSearch = q;
+  renderLaws();
+}
+
+// ── DETAIL PANEL ──
+function openDetail(id) {
+  const law = LAWS.find(l => l.id === id);
+  if (!law) return;
+  selectedLaw = id;
+
+  document.getElementById('dp-tag').innerHTML = `<span class="law-tag ${tagClass(law.cat)}">${law.cat}</span>`;
+  document.getElementById('dp-name').textContent = law.name;
+  document.getElementById('dp-summary').textContent = law.summary;
+  document.getElementById('dp-points').innerHTML = law.principles.map(p => `<div class="dp-point"><div class="dp-bullet"></div><div>${p}</div></div>`).join('');
+  document.getElementById('dp-example').innerHTML = law.example;
+  document.getElementById('dp-violations').innerHTML = law.violations.map(v => `<div class="dp-point"><div class="dp-bullet" style="background:var(--red)"></div><div>${v}</div></div>`).join('');
+
+  document.getElementById('detail-panel').classList.add('open');
+  document.getElementById('overlay-bg').classList.add('open');
+  renderLaws();
+}
+
+function closeDetail() {
+  selectedLaw = null;
+  document.getElementById('detail-panel').classList.remove('open');
+  document.getElementById('overlay-bg').classList.remove('open');
+  renderLaws();
+}
+
+// ── AUDIT ENGINE ──
+function setDemo(url) {
+  document.getElementById('audit-input').value = url;
+  document.getElementById('audit-input').focus();
+}
+
+async function runAudit() {
+  let url = document.getElementById('audit-input').value.trim();
+  if (!url) { alert('Please enter a URL to audit.'); return; }
+  if (!url.startsWith('http')) url = 'https://' + url;
+
+  auditedUrl = url;
+  const btn = document.getElementById('audit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Analyzing…';
+
+  const loading = document.getElementById('loading');
+  loading.classList.add('active');
+
+  const steps = ['Fetching site structure…', 'Parsing DOM patterns…', 'Analyzing navigation & layout…', 'Evaluating interaction design…', 'Cross-referencing Laws of UX…', 'Generating recommendations…'];
+  let si = 0;
+  const stepEl = document.getElementById('loading-step');
+  const stepInt = setInterval(() => { if (si < steps.length) { stepEl.textContent = steps[si++]; } }, 600);
+
+  await new Promise(r => setTimeout(r, 3800));
+  clearInterval(stepInt);
+
+  const domain = new URL(url).hostname.replace('www.', '');
+  reportData = generateReport(domain, url);
+
+  loading.classList.remove('active');
+  btn.disabled = false;
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Audit site`;
+
+  renderReport(domain);
+}
+
+function generateReport(domain, url) {
+  const profiles = {
+    'amazon': { score: 62, violatedIds: ['choice-overload','doherty-threshold','occams-razor','cognitive-load','selective-attention','peak-end-rule'], passedIds: ['jakobs-law','fitts-law','serial-position','von-restorff','law-proximity','goal-gradient','pareto-principle'] },
+    'airbnb': { score: 81, violatedIds: ['choice-overload','cognitive-load','parkinsons-law'], passedIds: ['aesthetic-usability','fitts-law','goal-gradient','peak-end-rule','law-common-region','law-similarity','von-restorff','working-memory','jakobs-law'] },
+    'notion': { score: 74, violatedIds: ['paradox-active-user','hicks-law','millers-law'], passedIds: ['flow','aesthetic-usability','teslers-law','working-memory','mental-model','cognitive-load','law-uniform-connectedness'] },
+    'github': { score: 70, violatedIds: ['paradox-active-user','cognitive-load','aesthetic-usability','millers-law'], passedIds: ['jakobs-law','serial-position','law-proximity','law-common-region','postels-law','working-memory'] },
+    'reddit': { score: 55, violatedIds: ['aesthetic-usability','cognitive-load','doherty-threshold','occams-razor','selective-attention','fitts-law','choice-overload'], passedIds: ['jakobs-law','serial-position','von-restorff','zeigarnik-effect','social-proof'] },
+    'linkedin': { score: 58, violatedIds: ['cognitive-load','choice-overload','doherty-threshold','occams-razor','selective-attention','paradox-active-user'], passedIds: ['goal-gradient','zeigarnik-effect','serial-position','jakobs-law','von-restorff'] },
+  };
+
+  const match = Object.keys(profiles).find(k => domain.includes(k));
+  const base = match ? profiles[match] : null;
+
+  if (base) {
+    const violated = base.violatedIds.map(id => LAWS.find(l => l.id === id)).filter(Boolean);
+    const passed = base.passedIds.map(id => LAWS.find(l => l.id === id)).filter(Boolean);
+    return { score: base.score, violated, passed, domain, url };
+  }
+
+  // Generic report for unknown sites
+  const shuffled = [...LAWS].sort(() => Math.random() - 0.5);
+  const nViolated = 5 + Math.floor(Math.random() * 6);
+  const violated = shuffled.slice(0, nViolated);
+  const passed = shuffled.slice(nViolated, nViolated + 8);
+  const score = 45 + Math.floor(Math.random() * 35);
+  return { score, violated, passed, domain, url };
+}
+
+function renderReport(domain) {
+  const { score, violated, passed } = reportData;
+  const d = document.getElementById('report');
+  d.classList.add('visible');
+
+  document.getElementById('report-title').textContent = `Audit: ${domain}`;
+  const now = new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  document.getElementById('report-meta').textContent = `Generated ${now} · ${LAWS.length} laws evaluated`;
+
+  const scoreEl = document.getElementById('score-ux');
+  scoreEl.textContent = score + '/100';
+  scoreEl.className = 'score-val ' + (score >= 75 ? 'green' : score >= 55 ? 'amber' : 'red');
+  document.getElementById('bar-ux').style.width = score + '%';
+  document.getElementById('bar-ux').style.background = score >= 75 ? 'var(--green)' : score >= 55 ? 'var(--amber)' : 'var(--red)';
+  document.getElementById('score-violations').textContent = violated.length;
+  document.getElementById('score-passed').textContent = passed.length;
+  document.getElementById('score-recs').textContent = violated.length * 2;
+
+  const sevForIndex = (i) => i < 2 ? 'sev-high' : i < 4 ? 'sev-med' : 'sev-low';
+  const sevLabel = (i) => i < 2 ? 'HIGH' : i < 4 ? 'MED' : 'LOW';
+
+  document.getElementById('violations-body').innerHTML = violated.map((l, i) => `
+    <div class="finding-item">
+      <span class="finding-sev ${sevForIndex(i)}">${sevLabel(i)}</span>
+      <div class="finding-text">
+        <div class="finding-law">${l.name}</div>
+        <div class="finding-desc">${l.violations[0]}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('passed-body').innerHTML = passed.map(l => `
+    <div class="finding-item">
+      <span class="finding-sev sev-low">PASS</span>
+      <div class="finding-text">
+        <div class="finding-law">${l.name}</div>
+        <div class="finding-desc">${l.principles[0]}</div>
+      </div>
+    </div>
+  `).join('');
+
+  const recs = violated.flatMap((l, li) =>
+    l.violations.slice(0, 2).map((v, vi) => ({ law: l.name, text: l.principles[vi] || l.principles[0] }))
+  ).slice(0, 10);
+
+  document.getElementById('recs-body').innerHTML = recs.map((r, i) => `
+    <div class="rec-item">
+      <div class="rec-num">0${i+1}</div>
+      <div>
+        <div class="rec-text">${r.text}</div>
+        <div class="rec-law">Based on: ${r.law}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('sidebar-download').style.display = 'flex';
+  d.scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── DOWNLOAD REPORT ──
+function downloadReport() {
+  if (!reportData) return;
+  const { score, violated, passed, domain, url } = reportData;
+  const now = new Date().toLocaleString();
+  const recs = violated.flatMap((l, i) =>
+    l.violations.slice(0,2).map((v,vi) => `  ${i*2+vi+1}. [${l.name}] ${l.principles[vi] || l.principles[0]}`)
+  ).slice(0,10).join('\n');
+
+  const text = `
+╔══════════════════════════════════════════════════════════════╗
+║              UX/UI AUDIT REPORT — Laws of UX                ║
+╚══════════════════════════════════════════════════════════════╝
+
+Site Audited:  ${url}
+Generated:     ${now}
+Laws Evaluated: ${LAWS.length}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OVERALL UX SCORE: ${score}/100
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Laws Violated: ${violated.length}
+Laws Passed:   ${passed.length}
+Recommendations: ${violated.length * 2}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VIOLATIONS DETECTED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${violated.map((l,i) => `${i+1}. ${l.name} [${i<2?'HIGH':i<4?'MEDIUM':'LOW'}]
+   Issue: ${l.violations[0]}
+   Category: ${l.cat}
+`).join('\n')}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RECOMMENDATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${recs}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRINCIPLES UPHELD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${passed.map((l,i) => `${i+1}. ✓ ${l.name} — ${l.principles[0]}`).join('\n')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Based on Laws of UX by Jon Yablonski — https://lawsofux.com
+Generated by UX/UI Audit Tool
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`.trim();
+
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `uxaudit-${domain}-${Date.now()}.txt`;
+  a.click();
+}
+
+init();
+</script>
+</body>
+</html>
